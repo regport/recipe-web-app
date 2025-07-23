@@ -3,11 +3,76 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Recipe Web App</title>
+    <title>Kitchen Cloud</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Welcome to the Recipe Web App</h1>
-    <script src="script.js"></script>
+    <div class="container"> <!--Outer Container-->
+        <div class="header"> <!-- Header containing main top nav menu -->
+            <a href="index.html"><img src="assets/img/Logo.jpg" alt="Website Logo" class="logo"></a>
+            <nav aria-label="Main site navigation">
+                <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">About</a></li>
+                <li><a href="recipes.html">Recipes</a></li>
+                </ul>
+            </nav> 
+        </div> 
+        <div id="main-content"> <!-- Main content on homepage containing a main and aside section -->
+            <section class="hero">
+                 <div class="overlay-text">
+                    <h1>Savour Every Bite</h1>
+                        <p>Discover delicious recipes curated by top chefs.</p>
+                        <a href="about.html" class="button-about">Start Cooking</a>  
+                    </div>
+            </section> 
+        
+        <section class="featured">
+            <h2>Our Top Picks</h2>
+            <div class="strip top-strip">
+            <div class="feature-box">
+                <img src="assets/img/recipe1.jpg" alt="Recipe 1">
+                <p>Quick & Easy Meals</p>
+            </div>
+            <div class="feature-box">
+                <img src="assets/img/recipe2.jpg" alt="Recipe 2">
+                <p>Family Favorites</p>
+            </div>
+            </div>
+               <div class="strip bottom-strip">
+                  <div class="feature-box">
+                  <img src="assets/img/recipe3.jpg" alt="Recipe 3">
+                  <p>Healthy Bites</p>
+               </div>
+               <div class="feature-box">
+                 <img src="assets/img/recipe4.jpg" alt="Recipe 4">
+                 <p>Chef Specials</p>
+               </div>
+            </div>
+        </section>
+
+    <section class="infographics">
+        <h2>What Our Users Say</h2>
+        <p>[Infographics: feedback, ratings, usage stats]</p>
+    </section>
+
+     <section class="connect">
+        <div class="subscribe">
+            <h3>Subscribe to Our Newsletter</h3>
+            <input type="email" placeholder="Enter your email">
+            <button>Subscribe</button>
+        </div>
+        <div class="contact-info">
+            <p>123 Flavor Street, Culinary City</p>
+            <p>Email: info@kitchencloud.com</p>
+            <p>Follow us on [Social Media Icons]</p>
+        </div>
+     </section>
+        <h1>Welcome to the Recipe Web App</h1>
+        <script src="script.js"></script>
+        <div class="footer">
+            <p>&copy; 2025 Kitchen Cloud. All rights reserved.</p>
+        </div>
+    </div>    
 </body>
 </html>
