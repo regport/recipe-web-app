@@ -2,9 +2,6 @@
 CREATE DATABASE IF NOT EXISTS recipe_app;
 USE recipe_app;
 
--- Drop the recipes table if it exists
-DROP TABLE IF EXISTS recipes;
-
 -- Create the recipes table
 CREATE TABLE recipes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +13,7 @@ CREATE TABLE recipes (
     difficulty VARCHAR(20)
 );
 
--- Insert 5 sample recipes from the given list
+-- Insert 5 recipes
 INSERT INTO recipes (title, category, ingredients, steps, time_per_step, difficulty) VALUES
 ('Spaghetti Bolognese', 'Main', 'spaghetti, minced beef, onion, garlic, tomato', 'Cook pasta. Cook beef. Mix with sauce.', 5, 'Medium'),
 ('Vegan Pancakes', 'Vegan', 'flour, oat milk, banana, baking powder', 'Mix ingredients. Cook on skillet.', 4, 'Easy'),
