@@ -17,7 +17,7 @@
             type="text" 
             id="keyword" 
             name="keyword" 
-            placeholder="e.g. pasta, mango"
+            placeholder="e.g. pasta, flour, onion"
         >
 
         <!-- Category Filter -->
@@ -25,7 +25,6 @@
         <select id="category" name="category">
             <option value="">Any</option>
             <option value="Main">Main</option>
-            <option value="Dessert">Dessert</option>
             <option value="Vegetarian">Vegetarian</option>
             <option value="Vegan">Vegan</option>
             <option value="Salad">Salad</option>
