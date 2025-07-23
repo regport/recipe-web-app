@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <?php
 require 'db.php';
 
