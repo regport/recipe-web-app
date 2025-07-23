@@ -2,8 +2,8 @@
 // Database credentials
 $host = 'localhost';
 $dbname = 'recipe_app';
-$user = 'root';
-$pass = 'Sosonewsaleem5522';
+$user = '';
+$pass = '';
 
 try {
     // Establish PDO connection to MySQL database
