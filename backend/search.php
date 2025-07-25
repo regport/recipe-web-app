@@ -4,7 +4,6 @@ require 'db.php';
 // Retrieve filters from URL
 $keyword = $_GET['keyword'] ?? '';
 $category = $_GET['category'] ?? '';
-$difficulty = $_GET['difficulty'] ?? '';
 
 // Base query
 $sql = "SELECT * FROM recipes WHERE 1=1";
@@ -20,11 +19,6 @@ if (!empty($keyword)) {
 if (!empty($category)) {
     $sql .= " AND category = ?";
     $params[] = $category;
-}
-
-if (!empty($difficulty)) {
-    $sql .= " AND difficulty = ?";
-    $params[] = $difficulty;
 }
 
 // Execute query
@@ -50,7 +44,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <li>
                 <strong><?= htmlspecialchars($recipe['title']) ?></strong><br>
                 Category: <?= htmlspecialchars($recipe['category']) ?><br>
-                Difficulty: <?= htmlspecialchars($recipe['difficulty']) ?><br>
                 Ingredients: <?= nl2br(htmlspecialchars($recipe['ingredients'])) ?><br>
                 Steps: <?= nl2br(htmlspecialchars($recipe['steps'])) ?><br>
                 Time per Step: <?= htmlspecialchars($recipe['time_per_step']) ?> minutes
@@ -69,7 +62,6 @@ require 'db.php';
 // Retrieve filters from URL
 $keyword = $_GET['keyword'] ?? '';
 $category = $_GET['category'] ?? '';
-$difficulty = $_GET['difficulty'] ?? '';
 
 // Base query
 $sql = "SELECT * FROM recipes WHERE 1=1";
@@ -85,11 +77,6 @@ if (!empty($keyword)) {
 if (!empty($category)) {
     $sql .= " AND category = ?";
     $params[] = $category;
-}
-
-if (!empty($difficulty)) {
-    $sql .= " AND difficulty = ?";
-    $params[] = $difficulty;
 }
 
 // Execute query
@@ -115,7 +102,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <li>
                 <strong><?= htmlspecialchars($recipe['title']) ?></strong><br>
                 Category: <?= htmlspecialchars($recipe['category']) ?><br>
-                Difficulty: <?= htmlspecialchars($recipe['difficulty']) ?><br>
                 Ingredients: <?= nl2br(htmlspecialchars($recipe['ingredients'])) ?><br>
                 Steps: <?= nl2br(htmlspecialchars($recipe['steps'])) ?><br>
                 Time per Step: <?= htmlspecialchars($recipe['time_per_step']) ?> minutes
