@@ -10,11 +10,10 @@ CREATE TABLE recipes (
     ingredients TEXT,
     steps TEXT,
     time_per_step INT,
-    difficulty VARCHAR(20)
-);
+  );
 
 -- Inserting 5 recipes
-INSERT INTO recipes (title, category, ingredients, steps, time_per_step, difficulty) VALUES
+INSERT INTO recipes (title, category, ingredients, steps, time_per_step) VALUES
 ('Spaghetti Bolognese', 'Main', 'spaghetti, minced beef, onion, garlic, tomato', 'Cook pasta. Cook beef. Mix with sauce.', 5, 'Medium'),
 ('Vegan Pancakes', 'Vegan', 'flour, oat milk, banana, baking powder', 'Mix ingredients. Cook on skillet.', 4, 'Easy'),
 ('Healthy Pizza', 'Main', 'whole wheat flour, tomato sauce, cheese, vegetables', 'Make dough. Add toppings. Bake.', 6, 'Medium'),
