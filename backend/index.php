@@ -30,16 +30,7 @@
             <option value="Salad">Salad</option>
         </select>
 
-        <!-- Difficulty Filter -->
-        <label for="difficulty">Difficulty:</label>
-        <select id="difficulty" name="difficulty">
-            <option value="">Any</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-        </select>
-
-        <!-- Submit Button -->
+               <!-- Submit Button -->
         <button type="submit">Search</button>
     </form>
 </body>
