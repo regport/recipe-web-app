@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kitchen Cloud</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container"> <!--Outer Container-->
+        <div class="header"> <!-- Header containing main top nav menu -->
+            <a href="index.html"><img src="assets/img/Logo.jpg" alt="Website Logo" class="logo"></a>
+            <button class="nav-toggle" aria-label="Toggle Navigation">
+            ☰
+            </button>
+            <nav aria-label="Main site navigation">
+                <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="recipes.html">Recipes</a></li>
+                </ul>
+            </nav> 
+        </div>
+
+        <!-- Main Content -->
+        <main class="recipe-detail">
+            
+            <!-- Hero Section -->
+            <section class="recipe-hero">
+                <img src="assets/img/mango-pie.jpg" alt="Recipe Image" class="recipe-image">
+                <!-- TODO: Backend should replace this image src dynamically using PHP -->
+                <div class="recipe-header">
+                    <form method="post" action="save-recipe.php" class="save-form">
+                        <input type="hidden" name="recipe_id" value="<?php echo $recipe['id']; ?>">
+                        <button type="submit" class="save-button">+ Save Recipe</button>
+                    </form>
+                    <h1><?php echo $recipe['title']; ?></h1>
+                    <p><?php echo $recipe['description']; ?></p>
+                    <div class="recipe-meta">
+                        <span>⏱ Prep: <?php echo $recipe['prep_time']; ?></span>
+                        <span>Cook: <?php echo $recipe['cook_time']; ?></span>
+                        <span>Serves: <?php echo $recipe['servings']; ?></span>
+                    </div>
+                </div>
+            </section>
+            
+            <hr class="divider">
+            <!-- Ingredients -->
+            <section class="ingredients">
+                <h2>Ingredients</h2>
+                <ul>
+                    <?php foreach ($ingredients as $item): ?>
+                    <li><?php echo $item; ?></li>
+                    <?php endforeach; ?>
+                 </ul>
+            </section>
+
+            <hr class="divider">
+            <!-- Instructions -->
+            <section class="instructions">
+                <h2>Instructions</h2>
+                <ol>
+                    <?php foreach ($steps as $step): ?>
+                    <li><?php echo $step; ?></li>
+                    <?php endforeach; ?>
+                </ol>
+            </section>
+
+            <hr class="divider">
+            <!-- Rating Section -->
+            <section class="rating">
+                <h2>Rate this Recipe</h2>
+                <form method="post" action="rate-recipe.php" class="rating-form">
+                    <input type="hidden" name="recipe_id" value="<?php echo $recipe['id']; ?>">
+                    
+                    <div class="stars">
+                        <label><input type="radio" name="rating" value="5" /><span>★</span></label>
+                        <label><input type="radio" name="rating" value="4" /><span>★</span></label>
+                        <label><input type="radio" name="rating" value="3" /><span>★</span></label>
+                        <label><input type="radio" name="rating" value="2" /><span>★</span></label>
+                        <label><input type="radio" name="rating" value="1" /><span>★</span></label>
+                    </div>
+
+                   <button type="submit" class="rate-button">Submit Rating</button>
+                </form>
+            </section>
+
+        
+            <!-- Back Link -->
+            <div class="back-link">
+                <a href="recipes.html">← Back to All Recipes</a>
+            </div>
+
+        </main>
+        <footer class="footer">
+            <p>&copy; 2025 Kitchen Cloud. All rights reserved.</p>
+       </footer>
+    </div>
+    <script src="main.js"></script> 
+</body>
+</html> 
