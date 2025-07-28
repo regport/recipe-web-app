@@ -1,33 +1,25 @@
--- create the database
-CREATE DATABASE recipe CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE recipe;
+drop database IF EXISTS recipe_app;
+CREATE DATABASE recipe_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- USERS
+drop user if EXISTS 'recipe-app'@'localhost';
+CREATE USER 'recipe-app'@'localhost' IDENTIFIED WITH mysql_native_password BY 'AppPass2025!';
+GRANT ALTER,CREATE,DELETE,DROP,INDEX,INSERT,REFERENCES,SELECT,UPDATE,CREATE VIEW,SHOW VIEW ON recipe_app.* TO 'recipe-app'@'localhost';
+
+USE recipe_app;
+
+-- Users
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- AUTHORS
-CREATE TABLE authors (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    profile_url VARCHAR(255)
-);
-
--- CATEGORIES
+-- Categories
 CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
-);
-
--- DIETARY
-CREATE TABLE dietary (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- INGREDIENTS
@@ -36,108 +28,82 @@ CREATE TABLE ingredients (
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
--- RECIPES
+-- Recipes
 CREATE TABLE recipes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    image_url VARCHAR(255),
-    prep_time VARCHAR(50),
-    cook_time VARCHAR(50),
-    servings VARCHAR(50),
-    author_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (author_id) REFERENCES authors(id)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL UNIQUE,
+  image VARCHAR(255),
+  prep_time VARCHAR(50) NOT NULL,   
+  cook_time VARCHAR(50) NOT NULL,
+  servings VARCHAR(50),
+  author_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
--- RECIPE_CATEGORIES
+-- Recipe ⇄ Category (Many-to-Many)
 CREATE TABLE recipe_categories (
-    recipe_id INT,
-    category_id INT,
-    PRIMARY KEY (recipe_id, category_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+  recipe_id INT,
+  category_id INT,
+  PRIMARY KEY(recipe_id, category_id),
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 -- RECIPE_INGREDIENTS
 CREATE TABLE recipe_ingredients (
-    recipe_id INT,
-    ingredient_id INT,
-    quantity VARCHAR(100),
-    PRIMARY KEY (recipe_id, ingredient_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
+  recipe_id INT,
+  ingredient_id INT,
+  quantity VARCHAR(100),
+  PRIMARY KEY (recipe_id, ingredient_id),
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+  FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
 );
 
--- STEPS
+-- Steps
 CREATE TABLE steps (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    recipe_id INT,
-    step_number INT,
-    instruction TEXT,
-    time_minutes INT,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  recipe_id INT,
+  step_number INT,
+  instruction TEXT,
+  duration INT,    -- minutes
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
--- RECIPE_DIETARY
-CREATE TABLE recipe_dietary (
-    recipe_id INT,
-    dietary_id INT,
-    PRIMARY KEY (recipe_id, dietary_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-    FOREIGN KEY (dietary_id) REFERENCES dietary(id) ON DELETE CASCADE
-);
-
--- FAVOURITES
+-- Favourites
 CREATE TABLE favourites (
-    user_id INT,
-    recipe_id INT,
-    PRIMARY KEY (user_id, recipe_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+  user_id INT,
+  recipe_id INT,
+  PRIMARY KEY(user_id, recipe_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
--- RATINGS
+-- Ratings
 CREATE TABLE ratings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    recipe_id INT,
-    difficulty_rating INT CHECK (difficulty_rating BETWEEN 1 AND 5), -- force to choose from 1-5
-    taste_rating INT CHECK (taste_rating BETWEEN 1 AND 5),
-    comment TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+  user_id INT,
+  recipe_id INT,
+  difficulty_score TINYINT NOT NULL CONSTRAINT raintgs_difficulty_score_chk CHECK (difficulty_score BETWEEN 1 AND 5),  -- 1–5
+  aesthetics_score TINYINT NOT NULL CONSTRAINT raintgs_aesthetics_score_chk CHECK (aesthetics_score BETWEEN 1 AND 5),  -- 1–5
+  taste_score TINYINT NOT NULL CONSTRAINT raintgs_taste_score_chk CHECK (taste_score BETWEEN 1 AND 5),  -- 1–5
+  PRIMARY KEY(user_id,recipe_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
--- USERS
-INSERT INTO users (name, email, password_hash) VALUES
-('User1 Example', 'user1@aaa.com', 'P@ssw0rd'),
-('User2 Example', 'user2@aaa.com', 'P@ssw0rd');
+-- Populate USERS
+INSERT INTO users (id,name,email,password_hash, created_at) VALUES 
+(1, 'Jo Pratt', 'user1@demo.com', SHA2('password',256), now()),
+(2, 'Justine Pattison', 'user2@demo.com', SHA2('password',256), now()),
+(3, 'Sunil Vijayakar', 'user3@demo.com', SHA2('password',256), now()),
+(4, 'Nargisse Benkabbou', 'user4@demo.com', SHA2('password',256), now()),
+(5, 'James Martin', 'user5@demo.com', SHA2('password',256), now()),
+(6, 'Samin Nosrat', 'user6@demo.com', SHA2('password',256), now()),
+(7, 'Sabrina Ghayour', 'user7@demo.com', SHA2('password',256), now());
 
--- AUTHORS
-INSERT INTO authors (id, name) VALUES
-(1, 'Jo Pratt'),
-(2, 'Justine Pattison'),
-(3, 'Sunil Vijayakar'),
-(4, 'Nargisse Benkabbou'),
-(5, 'James Martin'),
-(6, 'Samin Nosrat'),
-(7, 'Sabrina Ghayour');
-
--- CATEGORIES
-INSERT INTO categories (name) VALUES
-('Main'), ('Vegetarian'), ('Vegan'), ('Dessert'), ('Salad'), ('Meat'), ('Breakfast'), ('Snack');
-
--- DIETARY
-INSERT INTO dietary (name) VALUES
-('Egg-free'),
-('Nut-free'),
-('Dairy-free'),
-('Pregnancy-friendly'),
-('Vegan'),
-('Vegetarian'),
-('Healthy'),
-('Gluten-free');
+-- Populate Categories
+INSERT INTO categories (name) VALUES 
+  ('Starter'),('Main'),('Meat'),('Vegetarian'),('Dessert'),('Vegan'), ('Salad'), ('Breakfast'), ('Snack');
 
 -- INGREDIENTS (from all 8 recipes, bbc website)
 INSERT INTO ingredients (name) VALUES
@@ -234,16 +200,16 @@ INSERT INTO ingredients (name) VALUES
 ('white cabbage'),
 ('pickled chillies');
 
--- RECIPES
-INSERT INTO recipes (title, image_url, author_id, prep_time, cook_time, servings) VALUES
-('Spaghetti Bolognese', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/spaghettibolognese_67868_16x9.jpg', 1, 'less than 30 mins', '1 to 2 hours', 'Serves 6-8'),
-('Vegan Pancakes', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/vegan_american_pancakes_76094_16x9.jpg', 2, 'less than 30 mins', '10 to 30 mins', 'Serves 2'),
-('Healthy Pizza', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/healthy_pizza_55143_16x9.jpg', 2, 'less than 30 mins', '10 to 30 mins', 'Serves 2'),
-('Easy Lamb Biryani', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/easy_lamb_biryani_46729_16x9.jpg', 3, 'overnight', '1 to 2 hours', 'Serves 6–8'),
-('Couscous Salad', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/dried_fruits_and_nuts_18053_16x9.jpg', 4, 'less than 30 mins', 'less than 10 mins', 'Serves 6'),
-('Plum Clafoutis', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/plumclafoutis_11536_16x9.jpg', 5, 'less than 30 mins', '30 mins to 1 hour', 'Serves 4-6'),
-('Mango Pie', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/mango_pie_18053_16x9.jpg', 6, '30 mins to 1 hour', '30 mins to 1 hour', 'Serves 16'),
-('Mushroom Doner', 'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/mushroom_doner_22676_16x9.jpg', 7, 'less than 30 mins', '10 to 30 mins', 'Serves 4');
+-- Sample Recipes 
+INSERT INTO recipes (id, name, image, author_id, prep_time, cook_time, servings, created_at) VALUES
+(1, 'Spaghetti Bolognese', 'img/spaghettibolognese_67868_16x9.jpg', 1, 'less than 30 mins', '1 to 2 hours', 'Serves 6-8', now()),
+(2, 'Vegan Pancakes', 'img/vegan_american_pancakes_76094_16x9.jpg', 2, 'less than 30 mins', '10 to 30 mins', 'Serves 2', now()),
+(3, 'Healthy Pizza', 'img//healthy_pizza_55143_16x9.jpg', 2, 'less than 30 mins', '10 to 30 mins', 'Serves 2', now()),
+(4, 'Easy Lamb Biryani', 'img/easy_lamb_biryani_46729_16x9.jpg', 3, 'overnight', '1 to 2 hours', 'Serves 6–8', now()),
+(5, 'Couscous Salad', 'img/dried_fruits_and_nuts_18053_16x9.jpg', 4, 'less than 30 mins', 'less than 10 mins', 'Serves 6', now()),
+(6, 'Plum Clafoutis', 'img/plumclafoutis_11536_16x9.jpg', 5, 'less than 30 mins', '30 mins to 1 hour', 'Serves 4-6', now()),
+(7, 'Mango Pie', 'img/mango_pie_18053_16x9.jpg', 6, '30 mins to 1 hour', '30 mins to 1 hour', 'Serves 16', now()),
+(8, 'Mushroom Doner', 'img/mushroom_doner_22676_16x9.jpg', 7, 'less than 30 mins', '10 to 30 mins', 'Serves 4', now());
 
 -- RECIPE_CATEGORIES
 INSERT INTO recipe_categories (recipe_id, category_id) VALUES
@@ -395,11 +361,9 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity) VALUES
 (8, 91, '1/4, shredded'),
 (8, 92, '4-6, sliced');
 
-
-## STEPS
-
+-- Steps
 -- Spaghetti Bolognese (recipe_id = 1)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (1, 1, 'Heat the oil in a large, heavy-based saucepan and fry the bacon until golden over a medium heat. Add the onions and garlic, frying until softened.', 10),
 (1, 2, 'Increase the heat and add the minced beef. Fry it until it has browned, breaking down any chunks of meat with a wooden spoon.', 10),
 (1, 3, 'Pour in the wine and boil until it has reduced in volume by about a third.', 10),
@@ -410,7 +374,7 @@ INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
 (1, 8, 'Drain and divide between plates. Scatter parmesan over the spaghetti, add Bolognese sauce, and finish with more cheese and black pepper.', 3);
 
 -- Vegan Pancakes (recipe_id = 2)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (2, 1, 'Mix the flour, baking powder, sugar and a pinch of salt in a bowl.', 2),
 (2, 2, 'Whisk the soya milk, vanilla extract, oil and lemon juice together in a jug.', 2),
 (2, 3, 'Pour the wet ingredients into the dry and whisk to a smooth batter.', 2),
@@ -419,7 +383,7 @@ INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
 (2, 6, 'Serve with maple syrup and fruit.', 1);
 
 -- Healthy Pizza (recipe_id = 3)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (3, 1, 'Mix the flours, yeast and salt in a bowl. Add water and oil to form a dough.', 5),
 (3, 2, 'Knead the dough for 5 minutes, then cover and leave to rise for 30 minutes.', 30),
 (3, 3, 'Roll out the dough, spread with tomato puree and chopped tomatoes.', 5),
@@ -427,7 +391,7 @@ INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
 (3, 5, 'Serve with yogurt.', 2);
 
 -- Easy Lamb Biryani (recipe_id = 4)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (4, 1, 'Fry onions and garlic in oil until golden.', 5),
 (4, 2, 'Add lamb and brown all over.', 10),
 (4, 3, 'Add spices and cook for 2 minutes.', 2),
@@ -435,14 +399,14 @@ INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
 (4, 5, 'Season and serve.', 3);
 
 -- Couscous Salad (recipe_id = 5)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (5, 1, 'Prepare couscous according to packet instructions.', 5),
 (5, 2, 'Chop dried fruit, nuts, tomato and onion.', 5),
 (5, 3, 'Mix all ingredients together and season.', 5),
 (5, 4, 'Serve chilled or at room temperature.', 10);
 
 -- Plum Clafoutis (recipe_id = 6)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (6, 1, 'Preheat oven to 180C. Grease a baking dish.', 5),
 (6, 2, 'Halve and stone the plums, arrange in the dish.', 5),
 (6, 3, 'Mix flour, sugar and salt. Whisk in eggs, milk and oil to make a batter.', 5),
@@ -451,7 +415,7 @@ INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
 (6, 6, 'Cool slightly before serving.', 5);
 
 -- Mango Pie (recipe_id = 7)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (7, 1, 'Preheat oven to 180C. Grease a pie dish.', 5),
 (7, 2, 'Peel and slice mangoes.', 5),
 (7, 3, 'Mix flour, sugar and salt. Whisk in eggs and oil to make a dough.', 5),
@@ -460,33 +424,10 @@ INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
 (7, 6, 'Cool before serving.', 5);
 
 -- Mushroom Doner (recipe_id = 8)
-INSERT INTO steps (recipe_id, step_number, instruction, time_minutes) VALUES
+INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (8, 1, 'Slice mushrooms and fry in oil until golden.', 5),
 (8, 2, 'Warm pita breads.', 2),
 (8, 3, 'Fill pitas with mushrooms, lettuce, cucumber, tomato and yogurt.', 5),
 (8, 4, 'Season and serve.', 2);
 
--- RECIPE_DIETARY
--- Spaghetti Bolognese (id=1)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (1, 1), (1, 2);
-
--- Vegan pancakes (id=2)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (2, 1), (2, 3), (2, 4), (2, 5), (2, 6);
-
--- Healthy pizza (id=3)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (3, 1), (3, 2), (3, 4), (3, 6), (3, 7);
-
--- Easy lamb biryani (id=4)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (4, 1), (4, 4), (4, 8);
-
--- Couscous salad (id=5)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (5, 1), (5, 5), (5, 6);
-
--- Plum clafoutis (id=6)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (6, 6);
-
--- Mango pie (id=7)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (7, 1), (7, 2);
-
--- Mushroom doner (id=8)
-INSERT INTO recipe_dietary (recipe_id, dietary_id) VALUES (8, 1), (8, 2), (8, 4), (8, 6), (8, 7);
+commit;
