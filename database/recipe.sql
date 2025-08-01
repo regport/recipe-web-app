@@ -2,7 +2,7 @@ drop database IF EXISTS recipe_app;
 CREATE DATABASE recipe_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 drop user if EXISTS 'recipe-app'@'localhost';
-CREATE USER 'recipe-app'@'localhost' IDENTIFIED WITH mysql_native_password BY 'AppPass2025!';
+CREATE USER 'recipe-app'@'localhost' IDENTIFIED BY 'AppPass2025!';
 GRANT ALTER,CREATE,DELETE,DROP,INDEX,INSERT,REFERENCES,SELECT,UPDATE,CREATE VIEW,SHOW VIEW ON recipe_app.* TO 'recipe-app'@'localhost';
 
 USE recipe_app;
@@ -83,12 +83,15 @@ CREATE TABLE favourites (
 CREATE TABLE ratings (
   user_id INT,
   recipe_id INT,
-  difficulty_score TINYINT NOT NULL CONSTRAINT raintgs_difficulty_score_chk CHECK (difficulty_score BETWEEN 1 AND 5),  -- 1–5
-  aesthetics_score TINYINT NOT NULL CONSTRAINT raintgs_aesthetics_score_chk CHECK (aesthetics_score BETWEEN 1 AND 5),  -- 1–5
-  taste_score TINYINT NOT NULL CONSTRAINT raintgs_taste_score_chk CHECK (taste_score BETWEEN 1 AND 5),  -- 1–5
+  difficulty_score TINYINT NOT NULL,   -- 1–5
+  aesthetics_score TINYINT NOT NULL,  -- 1–5
+  taste_score TINYINT NOT NULL,  -- 1–5
   PRIMARY KEY(user_id,recipe_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+  CONSTRAINT raintgs_taste_score_chk CHECK (taste_score BETWEEN 1 AND 5),
+  CONSTRAINT raintgs_difficulty_score_chk CHECK (difficulty_score BETWEEN 1 AND 5),
+  CONSTRAINT raintgs_aesthetics_score_chk CHECK (aesthetics_score BETWEEN 1 AND 5)
 );
 
 -- Populate USERS
@@ -103,7 +106,7 @@ INSERT INTO users (id,name,email,password_hash, created_at) VALUES
 
 -- Populate Categories
 INSERT INTO categories (name) VALUES 
-  ('Starter'),('Main'),('Meat'),('Vegetarian'),('Dessert'),('Vegan'), ('Salad'), ('Breakfast'), ('Snack');
+  ('Main'),('Meat'),('Vegetarian'),('Dessert'),('Vegan'), ('Salad'), ('Breakfast');
 
 -- INGREDIENTS (from all 8 recipes, bbc website)
 INSERT INTO ingredients (name) VALUES
@@ -205,22 +208,25 @@ INSERT INTO recipes (id, name, image, author_id, prep_time, cook_time, servings,
 (1, 'Spaghetti Bolognese', 'img/spaghettibolognese_67868_16x9.jpg', 1, 'less than 30 mins', '1 to 2 hours', 'Serves 6-8', now()),
 (2, 'Vegan Pancakes', 'img/vegan_american_pancakes_76094_16x9.jpg', 2, 'less than 30 mins', '10 to 30 mins', 'Serves 2', now()),
 (3, 'Healthy Pizza', 'img//healthy_pizza_55143_16x9.jpg', 2, 'less than 30 mins', '10 to 30 mins', 'Serves 2', now()),
-(4, 'Easy Lamb Biryani', 'img/easy_lamb_biryani_46729_16x9.jpg', 3, 'overnight', '1 to 2 hours', 'Serves 6–8', now()),
+(4, 'Easy Lamb Biryani', 'img/easy_lamb_biryani_46729_16x9.jpg', 3, 'overnight', '1 to 2 hours', 'Serves 6-8', now()),
 (5, 'Couscous Salad', 'img/dried_fruits_and_nuts_18053_16x9.jpg', 4, 'less than 30 mins', 'less than 10 mins', 'Serves 6', now()),
 (6, 'Plum Clafoutis', 'img/plumclafoutis_11536_16x9.jpg', 5, 'less than 30 mins', '30 mins to 1 hour', 'Serves 4-6', now()),
 (7, 'Mango Pie', 'img/mango_pie_18053_16x9.jpg', 6, '30 mins to 1 hour', '30 mins to 1 hour', 'Serves 16', now()),
 (8, 'Mushroom Doner', 'img/mushroom_doner_22676_16x9.jpg', 7, 'less than 30 mins', '10 to 30 mins', 'Serves 4', now());
 
+
 -- RECIPE_CATEGORIES
 INSERT INTO recipe_categories (recipe_id, category_id) VALUES
-(1, 1), (1, 6), -- Spaghetti Bolognese: Main, Meat
-(2, 2), (2, 3), (2, 7), -- Vegan Pancakes: Vegetarian, Vegan, Breakfast
-(3, 1), (3, 2), -- Healthy Pizza: Main, Vegetarian
-(4, 1), (4, 6), -- Easy Lamb Biryani: Main, Meat
-(5, 5), (5, 2), -- Couscous Salad: Salad, Vegetarian
-(6, 4), -- Plum Clafoutis: Dessert
-(7, 4), -- Mango Pie: Dessert
-(8, 1), (8, 2); -- Mushroom Doner: Main, Vegetarian
+(1, 1), (1, 2),        -- Spaghetti Bolognese: Main (1), Meat (2)
+(2, 3), (2, 5), (2, 7),-- Vegan Pancakes: Vegetarian (3), Vegan (5), Breakfast (7)
+(3, 1), (3, 3),        -- Healthy Pizza: Main (1), Vegetarian (3)
+(4, 1), (4, 2),        -- Easy Lamb Biryani: Main (1), Meat (2)
+(5, 6), (5, 3),        -- Couscous Salad: Salad (6), Vegetarian (3)
+(6, 4),                -- Plum Clafoutis: Dessert (4)
+(7, 4),                -- Mango Pie: Dessert (4)
+(8, 1), (8, 3);        -- Mushroom Doner: Main (1), Vegetarian (3)
+
+
 
 -- RECIPE_INGREDIENTS (for easy reference, add the recipe_id)
 -- Spaghetti Bolognese (recipe_id = 1)
