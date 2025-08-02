@@ -1,0 +1,7 @@
+2025-08-01 14:20:00 - Login result for user5@demo.com: false
+2025-08-01 14:20:28 - Login result for user5@demo.com: true
+2025-08-02 10:58:48 - Login result for test@example.com: true
+2025-08-02 10:58:48 - Login result for test@example.com: false
+2025-08-02 10:58:48 - Login result for notfound@example.com: false
+2025-08-02 11:45:58 - Login result for user5@demo.com: false
+2025-08-02 11:46:12 - Login result for user5@demo.com: true
