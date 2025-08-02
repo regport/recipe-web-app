@@ -622,24 +622,4 @@ hr {
     display: flex;
   }
 }
-@media (max-width: 510px) {
-    .strip {
-        flex-direction: column;
-    }
-    .featured h3 {
-        font-size: 2vh;
-    }
-    .featured p {
-        font-size: 2vh;
-    }
-}
-@media (max-width: 480px) {
-  .pagination {
-    gap: 0.25rem;
-  }
-  .page-link,
-  .page-number {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.6rem;
-  }
-}
+

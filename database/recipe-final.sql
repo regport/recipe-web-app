@@ -33,10 +33,11 @@ CREATE TABLE ingredients (
 CREATE TABLE recipes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL UNIQUE,
+  description VARCHAR(255),
   image VARCHAR(255),
   prep_time INT NOT NULL,      -- in minutes
   cook_time INT NOT NULL,      -- in minutes
-  servings VARCHAR(50),  
+  servings INT NOT NULL,  
   author_id INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (author_id) REFERENCES users(id)
@@ -208,15 +209,15 @@ INSERT INTO ingredients (name) VALUES
 
 
 -- Sample Recipes from BBC website
-INSERT INTO recipes (id, name, image, author_id, prep_time, cook_time, servings, created_at) VALUES
-(1, 'Spaghetti Bolognese', 'img/spaghettibolognese_67868_16x9.jpg', 1, 30, 90, 'Serves 6-8', now()),
-(2, 'Vegan Pancakes', 'img/vegan_american_pancakes_76094_16x9.jpg', 2, 30, 20, 'Serves 2', now()),
-(3, 'Healthy Pizza', 'img//healthy_pizza_55143_16x9.jpg', 2, 30, 20, 'Serves 2', now()),
-(4, 'Easy Lamb Biryani', 'img/easy_lamb_biryani_46729_16x9.jpg', 3, 480, 90, 'Serves 6-8', now()),
-(5, 'Couscous Salad', 'img/dried_fruits_and_nuts_18053_16x9.jpg', 4, 30, 10, 'Serves 6', now()),
-(6, 'Plum Clafoutis', 'img/plumclafoutis_11536_16x9.jpg', 5, 30, 45, 'Serves 4-6', now()),
-(7, 'Mango Pie', 'img/mango_pie_18053_16x9.jpg', 6, 45, 45, 'Serves 16', now()),
-(8, 'Mushroom Doner', 'img/mushroom_doner_22676_16x9.jpg', 7, 30, 20, 'Serves 4', now());
+INSERT INTO recipes (id, name, description, image, author_id, prep_time, cook_time, servings, created_at) VALUES
+(1, 'Spaghetti Bolognese', 'Classic Italian pasta with rich meat sauce.', 'img/spaghettibolognese_67868_16x9.jpg', 1, 30, 90, 8, now()),
+(2, 'Vegan Pancakes', 'Fluffy plant-based pancakes perfect for breakfast.', 'img/vegan_american_pancakes_76094_16x9.jpg', 2, 30, 20, 2, now()),
+(3, 'Healthy Pizza', 'Nutritious homemade pizza with fresh veggies.', 'img//healthy_pizza_55143_16x9.jpg', 2, 30, 20, 2, now()),
+(4, 'Easy Lamb Biryani', 'Fragrant and flavorful lamb biryani with spices.', 'img/easy_lamb_biryani_46729_16x9.jpg', 3, 480, 90, 8, now()),
+(5, 'Couscous Salad', 'Light couscous salad with fruits and nuts.', 'img/dried_fruits_and_nuts_18053_16x9.jpg', 4, 30, 10, 6, now()),
+(6, 'Plum Clafoutis', 'Traditional French dessert with fresh plums.', 'img/plumclafoutis_11536_16x9.jpg', 5, 30, 45, 6, now()),
+(7, 'Mango Pie', 'Tropical mango pie with a sweet crust.', 'img/mango_pie_18053_16x9.jpg', 6, 45, 45, 16, now()),
+(8, 'Mushroom Doner', 'Savory mushroom doner with fresh toppings.', 'img/mushroom_doner_22676_16x9.jpg', 7, 30, 20, 4, now());
 
 
 
