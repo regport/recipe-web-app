@@ -32,7 +32,7 @@ $stmtFavExists->execute([$uid, $recipeId]);
 $favExists = $stmtFavExists->fetchColumn();
 
 // Fetch average ratings
-$stmtAvgRatings = $pdo->prepare("SELECT avg(r.difficulty_score) as avg_difficulty_score, avg(r.aesthetics_score) as avg_aesthetics_score, avg(r.taste_score) as avg_taste_score, count(user_id) as no_of_users FROM ratings r WHERE r.recipe_id=?");
+$stmtAvgRatings = $pdo->prepare("SELECT avg(r.difficulty_score) as difficulty_avg_score, avg(r.aesthetics_score) as aesthetics_avg_score, avg(r.taste_score) as taste_avg_score, count(user_id) as no_of_users FROM ratings r WHERE r.recipe_id=?");
 $stmtAvgRatings->execute([$recipeId]);
 $avgRatings = $stmtAvgRatings->fetch();
 
@@ -43,9 +43,9 @@ $usersRating = $stmtUsersRating->fetch();
 
 $ratingCategories = ['difficulty', 'aesthetics', 'taste'];
 $selectedRatingScore = [
-    'difficulty' => $usersRating['difficulty_score'] ?? 1,
-    'aesthetics' => $usersRating['aesthetics_score'] ?? 1,
-    'taste' => $usersRating['taste_score'] ?? 1
+    'difficulty' => $usersRating['difficulty_score'] ?? -1,
+    'aesthetics' => $usersRating['aesthetics_score'] ?? -1,
+    'taste' => $usersRating['taste_score'] ?? -1
 ];
 
 $error = null;
@@ -91,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="recipe-hero">
         <?php
         $imageFile = !empty($recipe['image']) && file_exists("" . $recipe['image'])
-           ? "" . $recipe['image']
-           : "img/placeholder.jpg";
+            ? "" . $recipe['image']
+            : "img/placeholder.jpg";
         ?>
         <img src="<?= $imageFile ?>" alt="<?= htmlentities($recipe['name']) ?>" class="recipe-image">
 
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if (!isset($_SESSION['user_id'])): ?>
                     <a href="login.php" class="save-button1">+ Save Recipe</a>
                 <?php else: ?>
-                    <form method="post" action="save-recipe.php" class="save-form">
+                    <form method="post" class="save-form">
                         <input type="hidden" name="recipe_id" value="<?= $recipe['id'] ?>">
                         <button type="submit" name="fav" value="<?= $favExists ? 0 : 1 ?>" class="save-button">
                             <?= $favExists ? '★ Remove Favorite' : '+ Save Recipe' ?>
@@ -109,11 +109,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </form>
                 <?php endif; ?>
             </form>
+            <br>
+            <div class="recipe-avg-ratings">
+                <p>Average rating of <?= $avgRatings['no_of_users'] ?> users</p>
+                <div class="recipe-avg-rating-stars">
+                    <?php foreach ($ratingCategories as $ratingCategory): ?>
+                        <div class="recipe-avg-ratings-stars-block">
+                            <p><?= ucfirst($ratingCategory) ?>: </p>
+                            <div class="stars">
+                                <input class="star" checked type="radio" value="-1" id="<?= $ratingCategory . '-avg-skip-star' ?>" name="<?= $ratingCategory . '_avg_score' ?>" autocomplete="off" />
+                                <label class="star-label hidden"></label>
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <input class="star" type="radio" id="<?= $ratingCategory . '-avg-st-' . $i ?>" value="<?= $i ?>" name="<?= $ratingCategory . '_avg_score' ?>" autocomplete="off" <?= $i . "" === ceil($avgRatings[$ratingCategory . '_avg_score']) . "" ? "checked" : "" ?> />
+                                    <label class="star-label" for="<?= $ratingCategory . '-avg-st-' . $i ?>">
+                                        <span class="star-shape">★</span>
+                                    </label>
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
             <h1><?= htmlentities($recipe['name']) ?></h1>
             <p><?= htmlentities($recipe['description']) ?></p>
             <div class="recipe-meta">
-                <span>⏱ Prep: <?= $recipe['prep_time'] ?></span>
-                <span>Cook: <?= $recipe['cook_time'] ?></span>
+                <span>⏱ Prep: <?= $recipe['prep_time'] ?> mins</span>
+                <span>Cook: <?= $recipe['cook_time'] ?> mins</span>
                 <span>Serves: <?= $recipe['servings'] ?></span>
                 <span>Categories: <?= implode(', ', $cats) ?></span>
             </div>
@@ -146,33 +167,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <section class="rating">
         <h2><?= empty($usersRating) ? "Rate this Recipe" : "Your Rating" ?></h2>
-
-        <?php if ($avgRatings['no_of_users'] > 0): ?>
-            <p>Average rating of <?= $avgRatings['no_of_users'] ?> users</p>
-            <?php foreach ($ratingCategories as $cat): ?>
-                <p><?= ucfirst($cat) ?>: <?= round($avgRatings['avg_' . $cat . '_score'], 1) ?> / 5</p>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>This recipe hasn't been rated yet.</p>
-        <?php endif; ?>
-
         <form method="post" class="rating-form">
-            <?php foreach ($ratingCategories as $cat): ?>
-                <label>
-                    <?= ucfirst($cat) ?>
-                    <select name="<?= $cat ?>_score">
+            <?php foreach ($ratingCategories as $ratingCategory): ?>
+                <div class="star-container">
+                    <label class="star-container-label"><?= ucfirst($ratingCategory) ?></label>
+                    <div class="stars">
+                        <input class="star" checked type="radio" value="-1" id="<?= $ratingCategory . '-skip-star' ?>" name="<?= $ratingCategory . '_score' ?>" autocomplete="off" />
+                        <label class="star-label hidden"></label>
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <option value="<?= $i ?>" <?= $i == $selectedRatingScore[$cat] ? 'selected' : '' ?>><?= $i ?></option>
+                            <input class="star" type="radio" id="<?= $ratingCategory . '-st-' . $i ?>" value="<?= $i ?>" name="<?= $ratingCategory . '_score' ?>" autocomplete="off" <?= $i . "" === $selectedRatingScore[$ratingCategory] . "" ? "checked" : "" ?> />
+                            <label class="star-label" for="<?= $ratingCategory . '-st-' . $i ?>">
+                                <span class="star-shape">★</span>
+                            </label>
                         <?php endfor; ?>
-                    </select>
-                </label>
+                        <label class="skip-button" for="<?= $ratingCategory . '-skip-star' ?>">&times;</label>
+                    </div>
+                </div>
             <?php endforeach; ?>
-            <button type="submit" name="rate" class="rate-button">Submit Rating</button>
+            <?php if (!isset($_SESSION['user_id'])): ?>
+                <a href="login.php" class="rate-button">Submit Rating</a>
+            <?php else: ?>
+                <button type="submit" name="rate" class="rate-button">Submit Rating</button>
+            <?php endif; ?>
         </form>
     </section>
 
     <?php if ($error): ?>
-        <div class="error"><?= htmlentities($error) ?></div>
+        <div class="error-message"><?= htmlentities($error) ?></div>
     <?php endif; ?>
 
     <div class="back-link">
