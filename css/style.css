@@ -6,11 +6,19 @@
 }
 
 body {
-    font-family: Fraunces 120 light;
-    line-height: 1.6;
-    background-color: #ffffff;
-    color: #333;
-    height: 100%;
+  font-family: 'Georgia', serif;
+  background-color: #f6f2e7;
+  color: #3e3e3e;
+  flex-direction: column;
+  height: 100%;
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    align-items: center;
 }
 
 .container {
@@ -55,12 +63,10 @@ body {
     cursor: pointer;
 }
 
-
 .nav-menu li a {
      text-decoration: none;
      color: #333;
      font-weight: bold;
-
 }
 
 nav ul {
@@ -72,7 +78,7 @@ nav ul {
 .hero {
   margin-bottom: 15px;
   flex: 4;
-  background-image: url("assets/img/Home-2.jpg");
+  background-image: url("hero-img/Home-2.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -83,29 +89,35 @@ nav ul {
   justify-content: center;
   align-items: center;
   position: relative;
-  height: 400px;
+  height: 600px;
 }
 
 /* Text overlay on background image */
 .overlay-text {
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.5);
   border: 1px solid #f1f1f1;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  position: relative;
-  z-index: 1;
-  max-width: 800px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  margin: 10px;
+  width: 40%;
+
 }
 
 .overlay-text h1 {
-  font-size: 4vw;
+  font-size: 3vw;
   margin: 0;
   color: #ffffff;
+
 }
 
 .overlay-text p {
-  font-size: 2vw;
+  font-size: 1.5vw;
   color: #ffffff
 }
 
@@ -120,6 +132,7 @@ nav ul {
   font-weight: lighter;
   white-space: nowrap;
   margin: 15px;
+  font-size: max(12px, 1vw);
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -138,19 +151,20 @@ nav ul {
 
 .featured h2 {
     margin-bottom: 20px;
-    font-size: 3.5rem;
+    font-size: 4vw;
     font-style: italic;
 }
 
 .featured h3 {
-    font-size: 1.5rem;
+    font-size: 20px;
     margin: 10px 0;
 }
+
 .featured p {
     margin-bottom: 40px;
-    font-size: 17px;
-    font-family: 'avenier light';
+    font-size: 17px;   
 }
+
 .strip {
     display: flex;
     justify-content: space-around;
@@ -159,20 +173,16 @@ nav ul {
 
 .feature-box {
     background-color: #BFBF7E;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
+    margin: 20px;
     width: 45%;
 }
 
 .feature-box img {
-    width: 100%;
+    width: 75%;
     border-radius: 10px;
-}
-
-/* Section infopgraphics */
-.infographics, .connect {
-    padding: 40px;
-    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* Section connect */
@@ -184,6 +194,9 @@ nav ul {
     background-color: #FEFAF0;
 }
 
+.connect h4 {
+    font-size: 24px;
+}
 .subscribe input {
     padding: 10px;
     width: 70%;
@@ -202,51 +215,6 @@ nav ul {
 }
 
 /* Login Page */
-.auth-container {
-  overflow-x: hidden; 
-  flex: 1; 
-  max-width: 400px;
-  margin: 5rem auto;
-  background-color: #FEFAF0;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.auth-form .form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.auth-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-.auth-form input {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.auth-form button {
-  width: 100%;
-  padding: 0.8rem;
-  background-color: #BFBF7E;
-  border: none;
-  color: #333;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.auth-form button:hover {
-  background-color: #a0a05f;
-}
-
 .auth-link {
   margin-top: 1rem;
 }
@@ -265,13 +233,13 @@ nav ul {
   display: none; /* will be shown only if there's an error */
 }
 
-/* Form Page Layout */
+/* Registration Page Layout */
 .form-page {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  min-height: calc(100vh - 160px); 
+  margin: 50px;
 }
 
 .form-container {
@@ -338,7 +306,26 @@ nav ul {
   text-align: center;
 }
 
-/* Recipe page styling*/
+/* Search page styling*/
+
+.search-filter-section fieldset {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  min-width: 250px;
+}
+
+.search-filter-section legend {
+  font-weight: bold;
+  color: #333;
+}
+
+.search-filter-section label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
 
 .recipe-grid {
   display: grid;
@@ -362,7 +349,6 @@ nav ul {
 
 .search-filter-section {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
   padding: 2rem;
@@ -383,37 +369,6 @@ nav ul {
   padding: 0.5rem;
   border-radius: 4px;
   border: 1px solid #ccc;
-}
-
-/* Pagination styling*/
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 2rem 1rem;
-  flex-wrap: wrap;
-}
-
-.page-link,
-.page-number {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: white;
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.page-link:hover {
-  background: #f0f0f0;
-}
-
-.page-number.current {
-  background: #333;
-  color: white;
-  border-color: #333;
 }
 
 /* Recipe Details Page*/
@@ -494,6 +449,21 @@ nav ul {
   cursor: pointer;
   transition: 0.3s ease;
 }
+.save-button1 {
+  text-decoration: none;
+  background-color: transparent;
+  color: #333;
+  border: black 2px solid;
+  margin-bottom: 20px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.save-button1:hover {
+  background-color: #BFBF7E;
+  color: white;
+}
 
 .save-button:hover {
   background-color: #BFBF7E;
@@ -502,29 +472,6 @@ nav ul {
 /* Ratings section */
 .rating {
   margin-top: 2rem;
-}
-
-.stars {
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: center;
-}
-
-.stars input {
-  display: none;
-}
-
-.stars span {
-  font-size: 2rem;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.stars label:hover span,
-.stars label:hover ~ label span,
-.stars input:checked ~ label span {
-  color: #ffcc00;
 }
 
 .rate-button {
@@ -564,13 +511,6 @@ nav ul {
   color: #3e3e3e;
 }
 
-body {
-  margin: 0;
-  font-family: 'Georgia', serif;
-  background-color: #f6f2e7;
-  color: #3e3e3e;
-}
-
 .profile-header {
   background-color: #6c6652;
   padding: 1rem;
@@ -591,14 +531,6 @@ body {
   font-size: 1.2rem;
   padding-bottom: 0.5rem;
   border-bottom: 3px solid #fff;
-}
-
-.edit-details-btn {
-  background: transparent;
-  border: 1px solid #fff;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
 }
 
 .profile-container {
@@ -681,7 +613,7 @@ hr {
 }
 
 /* Responsive Design */
-@media (min-width: 768px) {
+@media (min-width: 410px) {
   .nav-toggle {
     display: none;
   }
@@ -689,6 +621,17 @@ hr {
   .nav-menu {
     display: flex;
   }
+}
+@media (max-width: 510px) {
+    .strip {
+        flex-direction: column;
+    }
+    .featured h3 {
+        font-size: 2vh;
+    }
+    .featured p {
+        font-size: 2vh;
+    }
 }
 @media (max-width: 480px) {
   .pagination {
