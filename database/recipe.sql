@@ -2,7 +2,7 @@ drop database IF EXISTS recipe_app;
 CREATE DATABASE recipe_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 drop user if EXISTS 'recipe-app'@'localhost';
-CREATE USER 'recipe-app'@'localhost' IDENTIFIED WITH mysql_native_password BY 'AppPass2025!';
+CREATE USER 'recipe-app'@'localhost' IDENTIFIED BY 'AppPass2025!';
 GRANT ALTER,CREATE,DELETE,DROP,INDEX,INSERT,REFERENCES,SELECT,UPDATE,CREATE VIEW,SHOW VIEW ON recipe_app.* TO 'recipe-app'@'localhost';
 
 USE recipe_app;
@@ -83,12 +83,15 @@ CREATE TABLE favourites (
 CREATE TABLE ratings (
   user_id INT,
   recipe_id INT,
-  difficulty_score TINYINT NOT NULL CONSTRAINT raintgs_difficulty_score_chk CHECK (difficulty_score BETWEEN 1 AND 5),  -- 1–5
-  aesthetics_score TINYINT NOT NULL CONSTRAINT raintgs_aesthetics_score_chk CHECK (aesthetics_score BETWEEN 1 AND 5),  -- 1–5
-  taste_score TINYINT NOT NULL CONSTRAINT raintgs_taste_score_chk CHECK (taste_score BETWEEN 1 AND 5),  -- 1–5
+  difficulty_score TINYINT NOT NULL,   -- 1–5
+  aesthetics_score TINYINT NOT NULL,  -- 1–5
+  taste_score TINYINT NOT NULL,  -- 1–5
   PRIMARY KEY(user_id,recipe_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+  CONSTRAINT raintgs_taste_score_chk CHECK (taste_score BETWEEN 1 AND 5),
+  CONSTRAINT raintgs_difficulty_score_chk CHECK (difficulty_score BETWEEN 1 AND 5),
+  CONSTRAINT raintgs_aesthetics_score_chk CHECK (aesthetics_score BETWEEN 1 AND 5)
 );
 
 -- Populate USERS
