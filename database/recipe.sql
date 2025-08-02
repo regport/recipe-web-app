@@ -37,7 +37,7 @@ CREATE TABLE recipes (
   image VARCHAR(255),
   prep_time INT NOT NULL,      -- in minutes
   cook_time INT NOT NULL,      -- in minutes
-  servings VARCHAR(50),  
+  servings INT NOT NULL,  
   author_id INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (author_id) REFERENCES users(id)
@@ -443,3 +443,4 @@ INSERT INTO steps (recipe_id, step_number, instruction, duration) VALUES
 (8, 4, 'Season and serve.', 2);
 
 commit;
+
