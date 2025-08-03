@@ -493,6 +493,7 @@ nav ul {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
 .recipe-avg-rating-stars p {
