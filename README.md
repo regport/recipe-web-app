@@ -17,3 +17,8 @@ Add your images here, e.g., logos, food photos, icons.
 - Open browser and navigate to localhost/recipes -> you should see the home page of the app.
 
 
+#  to run unit tests
+ - Download and install composer from https://getcomposer.org/doc/00-intro.md
+ - Install phpunit 10 or higher
+ - Run the below command
+ > vendor/phpunit/phpunit/phpunit test/loginTest.php

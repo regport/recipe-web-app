@@ -1,7 +1,7 @@
 <?php
 require 'includes/header.php';
 
-$uid = $_SESSION['user_id'];
+$uid = isset($_SESSION['user_id']) ?  $_SESSION['user_id'] : '-1';
 
 $recipeId = intval($_GET['id'] ?? 0);
 
@@ -184,6 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             <?php endforeach; ?>
+
+            <br />
             <?php if (!isset($_SESSION['user_id'])): ?>
                 <a href="login.php" class="rate-button">Submit Rating</a>
             <?php else: ?>

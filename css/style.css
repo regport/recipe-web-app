@@ -89,7 +89,7 @@ nav ul {
   justify-content: center;
   align-items: center;
   position: relative;
-  height: 600px;
+  min-height: 400px;
 }
 
 /* Text overlay on background image */
@@ -189,7 +189,7 @@ nav ul {
 /* Section connect */
 .connect {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 40px;
   background-color: #fefaf0;
@@ -199,21 +199,14 @@ nav ul {
 .connect h4 {
   font-size: 24px;
 }
-.subscribe input {
-  padding: 10px;
-  width: 70%;
-  margin-right: 10px;
+.story img {
+  float: left;
+  padding: 1rem;
+  max-width: 300px;
 }
 
-.subscribe button {
-  padding: 10px 20px;
-  background-color: #bfbf7e;
-  border: none;
-  color: #333;
-  margin: 10px 0;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.contact-info {
+  margin: 1rem;
 }
 
 /* Login Page */
@@ -228,11 +221,6 @@ nav ul {
 
 .auth-link a:hover {
   text-decoration: underline;
-}
-.error-msg {
-  color: red;
-  font-size: 0.9rem;
-  display: none; /* will be shown only if there's an error */
 }
 
 /* Registration Page Layout */
@@ -364,41 +352,7 @@ nav ul {
 .search-filter-section button:hover {
   background-color: #8d8d49;
 }
-/*
-.search-filter-section {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding: 2rem;
-}
 
-.search-filter-section input,
-.search-filter-section select,
-.search-filter-section button {
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.search-filter-section fieldset {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  min-width: 250px;
-}
-
-.search-filter-section legend {
-  font-weight: bold;
-  color: #333;
-}
-
-.search-filter-section label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-*/
 .recipe-grid {
   display: flex;
   justify-content: flex-start;
@@ -542,7 +496,7 @@ nav ul {
 }
 
 .recipe-avg-rating-stars p {
-  padding: 1.5%;
+  padding-right: 0.25rem;
 }
 
 .recipe-avg-ratings-stars-block {
@@ -553,7 +507,6 @@ nav ul {
   min-width: 240px;
 }
 
-
 /* Ratings section */
 .rating {
   margin-top: 2rem;
@@ -562,10 +515,11 @@ nav ul {
 .star-container {
   display: flex;
   justify-content: felx-start;
+  align-items: center;
 }
 
 .star-container-label {
-  text-align: center;
+  text-align: left;
   min-width: 20%;
   padding: 0.75rem 0;
 }
@@ -603,6 +557,35 @@ nav ul {
 
 .star:focus + .star-label {
   outline: 2px dotted black;
+}
+
+/* clear checked stars */
+.skip-button {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 1rem;
+  position: absolute;
+  top: -0.1rem;
+  right: -1rem;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.skip-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+#difficulty-skip-star:checked ~ .skip-button {
+  display: none;
+}
+
+#aesthetics-skip-star:checked ~ .skip-button {
+  display: none;
+}
+
+#taste-skip-star:checked ~ .skip-button {
+  display: none;
 }
 
 .rate-button {

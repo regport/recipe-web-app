@@ -24,3 +24,5 @@ Desktop.ini
 # XAMPP logs or temp files (if any)
 xampp/tmp/
 xampp/logs/
+
+/vendor/
