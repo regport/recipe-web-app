@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="recipe-avg-ratings-stars-block">
                             <p><?= ucfirst($ratingCategory) ?>: </p>
                             <div class="stars">
-                                <input class="star" checked type="radio" value="-1" id="<?= $ratingCategory . '-avg-skip-star' ?>" name="<?= $ratingCategory . '_avg_score' ?>" autocomplete="off" />
+                                <input class="star" checked type="radio" value="-1" aria-hidden="true" role="presentation" disabled id="<?= $ratingCategory . '-avg-skip-star' ?>" name="<?= $ratingCategory . '_avg_score' ?>" autocomplete="off" />
                                 <label class="star-label hidden"></label>
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <input class="star" type="radio" id="<?= $ratingCategory . '-avg-st-' . $i ?>" value="<?= $i ?>" name="<?= $ratingCategory . '_avg_score' ?>" autocomplete="off" <?= $i . "" === ceil($avgRatings[$ratingCategory . '_avg_score']) . "" ? "checked" : "" ?> />
@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="star-container">
                     <label class="star-container-label"><?= ucfirst($ratingCategory) ?></label>
                     <div class="stars">
-                        <input class="star" checked type="radio" value="-1" id="<?= $ratingCategory . '-skip-star' ?>" name="<?= $ratingCategory . '_score' ?>" autocomplete="off" />
+                        <input class="star" checked type="radio" value="-1" id="<?= $ratingCategory . '-skip-star' ?>" name="<?= $ratingCategory . '_score' ?>" autocomplete="off"   aria-label="Average difficulty rating: 3 out of 5 stars"/>
                         <label class="star-label hidden"></label>
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <input class="star" type="radio" id="<?= $ratingCategory . '-st-' . $i ?>" value="<?= $i ?>" name="<?= $ratingCategory . '_score' ?>" autocomplete="off" <?= $i . "" === $selectedRatingScore[$ratingCategory] . "" ? "checked" : "" ?> />
